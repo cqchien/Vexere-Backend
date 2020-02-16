@@ -1,0 +1,26 @@
+{
+  "name": "vexere",
+  "version": "1.0.0",
+  "description": "Booking online tickets for coaches",
+  "main": "server.js",
+  "scripts": {
+    "start": "nodemon server.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cqchien/Vexere.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/cqchien/Vexere/issues"
+  },
+  "homepage": "https://github.com/cqchien/Vexere#readme",
+  "dependencies": {
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1",
+    "mongoose": "^5.9.1",
+    "nodemon": "^2.0.2"
+  }
+}

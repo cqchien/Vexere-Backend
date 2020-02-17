@@ -51,7 +51,7 @@ const deleteStationById = async (req, res, next) => {
   try {
     let { stationId } = req.params;
     await Stations.deleteOne({ _id: stationId });
-    return res.status(204).json(station);
+    return res.status(204).json();
   } catch (error) {
     res.status(500).json(error);
   }

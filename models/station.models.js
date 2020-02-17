@@ -10,7 +10,7 @@ const StationShema = new mongoose.Schema({
     require: true
   },
   province: {
-    type: true,
+    type: String,
     require: true
   }
 });

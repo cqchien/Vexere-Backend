@@ -31,16 +31,21 @@ const getStationById = async (req, res, next) => {
 const updateStationById = async (req, res, next) => {
   try {
     let { stationId } = req.params;
-    Stations.findOne({ _id: stationId }).then((station) => {
-      if (!station) {
-        return Promise.reject({
-          status: 404,
-          message: "Station not found"
-        });
-      }
-      station = req.body;
-      return res.status(200).json(station);
-    });
+    let { name, address, province } = req.body;
+    Stations.findOne({ _id: stationId })
+      .then((station) => {
+        if (!station) {
+          return Promise.reject({
+            status: 404,
+            message: "Station not found"
+          });
+        }
+        station.name = name;
+        station.address = address;
+        station.province = province;
+        return station.save();
+      })
+      .then((station) => res.status(200).json(station));
   } catch (error) {
     if (!error.status) return res.status(500).json(error);
     return res.status(error.status).json(error.message);
@@ -51,7 +56,7 @@ const deleteStationById = async (req, res, next) => {
   try {
     let { stationId } = req.params;
     await Stations.deleteOne({ _id: stationId });
-    return res.status(204).json();
+    return res.status(204).json("Delete succesfuly");
   } catch (error) {
     res.status(500).json(error);
   }

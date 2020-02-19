@@ -8,6 +8,7 @@ const hash = promisify(bcrypt.hash);
 const UserShema = new mongoose.Schema({
   Email: {
     type: String,
+    require: true,
     unique: true
   },
   password: String,
@@ -20,7 +21,8 @@ const UserShema = new mongoose.Schema({
     require: true
   },
   userType: {
-    enum: ["admin", "client", "anonymous"]
+    type: String,
+    default: "client"
   }
 });
 

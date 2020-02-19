@@ -32,9 +32,10 @@ const login = async (req, res, next) => {
             message: "Email does not exist"
           });
         }
-        return Promise.all[(comparePassword(password, user.password), user)];
+        return Promise.all([comparePassword(password, user.password), user]);
       })
       .then((result) => {
+        console.log(result);
         let isMatched = result[0];
         let user = result[1];
 
@@ -55,6 +56,7 @@ const login = async (req, res, next) => {
       });
   } catch (error) {
     if (!error.status) {
+      console.log(error);
       return res.status(500).json({ message: error.message });
     }
     return res.status(error.status).json(error.message);

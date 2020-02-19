@@ -28,10 +28,10 @@ const getStationById = async (req, res, next) => {
   }
 };
 
-const updateStationById = async (req, res, next) => {
+const replaceStationById = async (req, res, next) => {
   try {
     let { stationId } = req.params;
-    let { name, address, province } = req.body;
+    // let { name, address, province } = req.body;
     Stations.findOne({ _id: stationId })
       .then((station) => {
         if (!station) {
@@ -40,9 +40,39 @@ const updateStationById = async (req, res, next) => {
             message: "Station not found"
           });
         }
-        station.name = name;
-        station.address = address;
-        station.province = province;
+        // station.name = name;
+        // station.address = address;
+        // station.province = province;
+        Object.key(req.body).forEach((key) => {
+          return (station[key] = req.body[key]);
+        });
+        return station.save();
+      })
+      .then((station) => res.status(200).json(station));
+  } catch (error) {
+    if (!error.status) return res.status(500).json(error);
+    return res.status(error.status).json({ message: error.message });
+  }
+};
+
+const updateStationById = async (req, res, next) => {
+  try {
+    let { stationId } = req.params;
+    // let { name, address, province } = req.body;
+    Stations.findOne({ _id: stationId })
+      .then((station) => {
+        if (!station) {
+          return Promise.reject({
+            status: 404,
+            message: "Station not found"
+          });
+        }
+        Object.keys(req.body).forEach((key) => {
+          return (station[key] = req.body[key]);
+        });
+        // if (name) station.name = name;
+        // if (station) station.address = address;
+        // if (province) station.province = province;
         return station.save();
       })
       .then((station) => res.status(200).json(station));
@@ -67,5 +97,6 @@ module.exports = {
   getStation,
   getStationById,
   updateStationById,
-  deleteStationById
+  deleteStationById,
+  replaceStationById
 };

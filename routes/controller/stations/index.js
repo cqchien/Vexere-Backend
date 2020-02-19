@@ -6,7 +6,8 @@ const {
   getStation,
   getStationById,
   updateStationById,
-  deleteStationById
+  deleteStationById,
+  replaceStationById
 } = require("./stations");
 
 router.get("/", getStation);
@@ -14,7 +15,8 @@ router.get("/:stationId", getStationById);
 
 router.post("/", createStation);
 
-router.put("/:stationId", updateStationById);
+router.put("/:stationId", replaceStationById);
+router.patch("/:stationId", updateStationById);
 router.delete("/:stationId", deleteStationById);
 
 module.exports = router;

@@ -52,7 +52,7 @@ const createTrip = async (req, res, next) => {
 
 const getTrip = async (req, res, next) => {
   try {
-    let trip = await Trips.find();
+    let trip = await Trips.find().populate("fromStation").populate("toStation").select("-seat");
     return res.status(200).json(trip);
   } catch (error) {
     res.status(500).json({ message: error.message });

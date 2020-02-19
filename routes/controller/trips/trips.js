@@ -46,7 +46,7 @@ const createTrip = async (req, res, next) => {
     });
     return res.status(200).json(newTrip);
   } catch (error) {
-    res.status(500).json(error);
+    res.status(500).json({ message: error.message });
   }
 };
 
@@ -55,7 +55,7 @@ const getTrip = async (req, res, next) => {
     let trip = await Trips.find();
     return res.status(200).json(trip);
   } catch (error) {
-    res.status(500).json(error);
+    res.status(500).json({ message: error.message });
   }
 };
 
@@ -65,7 +65,7 @@ const getTripById = async (req, res, next) => {
     let trip = await Trips.findOne({ _id: tripId });
     return res.status(200).json(trip);
   } catch (error) {
-    res.status(500).json(error);
+    res.status(500).json({ message: error.message });
   }
 };
 
@@ -91,7 +91,7 @@ const updateTripById = async (req, res, next) => {
       .then((trip) => res.status(200).json(trip));
   } catch (error) {
     if (!error.status) return res.status(500).json(error);
-    return res.status(error.status).json(error.message);
+    return res.status(error.status).json({ message: error.message });
   }
 };
 
@@ -99,9 +99,9 @@ const deleteTripById = async (req, res, next) => {
   try {
     let { tripId } = req.params;
     await Trips.deleteOne({ _id: tripId });
-    return res.status(204).json();
+    return res.status(204).json({ message: "Trip is deleted successfully" });
   } catch (error) {
-    res.status(500).json(error);
+    res.status(500).json({ message: error.message });
   }
 };
 

@@ -6,7 +6,10 @@ const genSalt = promisify(bcrypt.genSalt);
 const hash = promisify(bcrypt.hash);
 
 const UserShema = new mongoose.Schema({
-  Email: String,
+  Email: {
+    type: String,
+    unique: true
+  },
   password: String,
   fullname: {
     type: String,
@@ -25,7 +28,6 @@ const UserShema = new mongoose.Schema({
 
 UserShema.pre("save", function save(next) {
   const user = this;
-  console.log("user:", user);
   if (!user.isModified("password")) return next();
 
   genSalt()

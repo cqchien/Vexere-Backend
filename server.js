@@ -22,6 +22,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 // middleware router
 app.use("/api", require("./routes/api"));
+app.use("/upload", express.static("./upload"));
 
 app.listen(port, () => {
   console.log(`App is running on port: ${port}`);

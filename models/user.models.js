@@ -23,7 +23,8 @@ const UserShema = new mongoose.Schema({
   userType: {
     type: String,
     default: "client"
-  }
+  },
+  avatar: String
 });
 
 // hash middleware

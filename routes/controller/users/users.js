@@ -1,12 +1,5 @@
 const { Users } = require("../../../models/user.models");
 
-const bcrypt = require("bcryptjs");
-const jwt = require("jsonwebtoken");
-const { promisify } = require("util");
-
-const comparePassword = promisify(bcrypt.compare);
-const jwtSign = promisify(jwt.sign);
-
 const createUser = async (req, res, next) => {
   try {
     let user = await Users.findOne({ Email: req.body.Email });
@@ -21,68 +14,73 @@ const createUser = async (req, res, next) => {
   }
 };
 
-const login = async (req, res, next) => {
+const getUser = async (req, res, next) => {
   try {
-    let { Email, password } = req.body;
-    await Users.findOne({ Email: Email })
-      .then((user) => {
-        if (!user) {
-          return Promise.reject({
-            status: 400,
-            message: "Email does not exist"
-          });
-        }
-        return Promise.all([comparePassword(password, user.password), user]);
-      })
-      .then((result) => {
-        console.log(result);
-        let isMatched = result[0];
-        let user = result[1];
-
-        if (!isMatched) {
-          return Promise.reject({
-            status: 400,
-            message: "Password is incorrect"
-          });
-        }
-        const payload = {
-          Email: user.Email,
-          userType: user.userType
-        };
-        return jwtSign(payload, "CyberSoft", { expiresIn: 3600 });
-      })
-      .then((token) => {
-        return res.status(200).json({ message: "Login successfully", token });
-      });
+    let users = await Users.find();
+    return res.status(200).json(users);
   } catch (error) {
-    if (!error.status) {
-      console.log(error);
-      return res.status(500).json({ message: error.message });
-    }
-    return res.status(error.status).json(error.message);
+    res.status(500).json({ message: error.message });
   }
 };
 
-const uploadAvatar = async (req, res, next) => {
+const getUserById = async (req, res, next) => {
   try {
-    let { Email } = req.user;
-    Users.findOne({ Email })
+    let { userId } = req.params;
+    let user = await Users.findOne({ _id: userId });
+    return res.status(200).json(user);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+const updateUserByAdmin = async (req, res, next) => {
+  try {
+    let { userId } = req.params;
+    Users.findOne({ Email: Email })
       .then((user) => {
-        if (!user)
-          return res.status(404).json({ message: "User is not exist" });
-        user.avatar = req.file.path;
+        Object.keys(req.body).map((key) => {
+          return (user[key] = req.body[key]);
+        });
         return user.save();
       })
-      .then((user) =>
-        res.status(200).json({ message: "Upload is successfully", user })
-      );
+      .then((user) => res.status(200).json(user));
   } catch (error) {
-    return res.status(500).json({ message: error.message });
+    res.status(500).json({ message: error.message });
+  }
+};
+
+const updateUserByClient = async (req, res, next) => {
+  try {
+    let user = req.user;
+    console.log(user);
+    Users.findOne({ Email: user.Email })
+      .then((user) => {
+        Object.keys(req.body).map((key) => {
+          return (user[key] = req.body[key]);
+        });
+        return user.save();
+      })
+      .then((user) => res.status(200).json(user));
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+const deleteById = async (req, res, next) => {
+  try {
+    let { userId } = req.params;
+    await Users.deleteOne({ _id: userId });
+    return res.status(204).json({ message: "Deleted successfully" });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
   }
 };
 
 module.exports = {
   createUser,
-  login,
-  uploadAvatar
+  getUser,
+  getUserById,
+  updateUserByAdmin,
+  updateUserByClient,
+  deleteById
 };

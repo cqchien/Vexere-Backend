@@ -5,8 +5,7 @@ module.exports.uploadAvatar = async (req, res, next) => {
     let { Email } = req.user;
     Users.findOne({ Email })
       .then((user) => {
-        if (!user)
-          return res.status(404).json({ message: "User is not exist" });
+        console.log(req.file);
         user.avatar = req.file.path;
         return user.save();
       })

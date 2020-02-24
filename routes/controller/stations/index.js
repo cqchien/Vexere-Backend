@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-
+const { authenticate } = require("../../../middlewares/auth.middlewares");
 const {
   createStation,
   getStation,
@@ -13,10 +13,10 @@ const {
 router.get("/", getStation);
 router.get("/:stationId", getStationById);
 
-router.post("/", createStation);
+router.post("/", authenticate, createStation);
 
-router.put("/:stationId", replaceStationById);
-router.patch("/:stationId", updateStationById);
-router.delete("/:stationId", deleteStationById);
+router.put("/:stationId", authenticate, replaceStationById);
+router.patch("/:stationId", authenticate, updateStationById);
+router.delete("/:stationId", authenticate, deleteStationById);
 
 module.exports = router;

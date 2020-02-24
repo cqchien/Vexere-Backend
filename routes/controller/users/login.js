@@ -3,6 +3,7 @@ const { Users } = require("../../../models/user.models");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const { promisify } = require("util");
+const _ = require("lodash");
 
 const comparePassword = promisify(bcrypt.compare);
 const jwtSign = promisify(jwt.sign);
@@ -10,21 +11,22 @@ const jwtSign = promisify(jwt.sign);
 module.exports.login = async (req, res, next) => {
   try {
     let { Email, password } = req.body;
-    await Users.findOne({ Email: Email })
+    let _user;
+    Users.findOne({ Email })
       .then((user) => {
-        console.log(user)
         if (!user) {
           return Promise.reject({
             status: 400,
             message: "Email does not exist"
           });
         }
-        return Promise.all([comparePassword(password, user.password), user]);
+        _user = user;
+        return comparePassword(password, user.password);
+        // return Promise.all([comparePassword(password, user.password), user]);
       })
-      .then((result) => {
-        console.log(result);
-        let isMatched = result[0];
-        let user = result[1];
+      .then((isMatched) => {
+        // let isMatched = result[0];
+        // let user = result[1];
 
         if (!isMatched) {
           return Promise.reject({
@@ -32,10 +34,7 @@ module.exports.login = async (req, res, next) => {
             message: "Password is incorrect"
           });
         }
-        const payload = {
-          Email: user.Email,
-          userType: user.userType
-        };
+        const payload = _.pick(_user, ["Email", "fullname", "userType"]);
         return jwtSign(payload, "CyberSoft", { expiresIn: 3600 });
       })
       .then((token) => {

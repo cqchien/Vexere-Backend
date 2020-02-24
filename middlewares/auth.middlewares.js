@@ -1,7 +1,4 @@
-const jwt = require("jsonwebtoken");
-const { promisify } = require("util");
-
-const jwtVerify = promisify(jwt.verify);
+const { jwtVerify } = require("../helper/callbackToPromise.helper");
 
 module.exports.authenticate = async (req, res, next) => {
   const token = req.header("token");
@@ -17,7 +14,6 @@ module.exports.authenticate = async (req, res, next) => {
       next();
     })
     .catch((error) => {
-      res.status(500).json(error);
-      next();
+      return res.status(500).json(error);
     });
 };

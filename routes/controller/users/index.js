@@ -14,7 +14,7 @@ router.get("/:userId", getUserById);
 
 router.put("/:userId", authenticate, authorize(["admin"]), updateUserByAdmin );
 router.put("/me", authenticate, authorize(["client"]), updateUserByClient );
-router.patch("/avatar", authenticate, uploadImage("avatar"), uploadAvatar );
+router.post("/avatar", authenticate, uploadImage("avatar"), uploadAvatar );
 router.delete("/:userId", authenticate, authorize(["admin"]), deleteById );
 
 router.post("/", authenticate, authorize(["admin"]), createUser);

@@ -1,11 +1,14 @@
 const { Users } = require("../../../models/user.models");
+const bcrypt = require("bcryptjs");
+const { promisify } = require("util");
+const comparePassword = promisify(bcrypt.compare);
 
 const createUser = async (req, res, next) => {
   try {
     let user = await Users.findOne({ Email: req.body.Email });
-    if (user) {
-      return res.status(400).json({ message: "Email is existed" });
-    }
+    // if (user) {
+    //   return res.status(400).json({ message: "Email is existed" });
+    // }
 
     let newUser = await Users.create(req.body);
     return res.status(200).json(newUser);
@@ -36,7 +39,7 @@ const getUserById = async (req, res, next) => {
 const updateUserByAdmin = async (req, res, next) => {
   try {
     let { userId } = req.params;
-    Users.findOne({ Email: Email })
+    Users.findOne({ _id: userId })
       .then((user) => {
         Object.keys(req.body).map((key) => {
           return (user[key] = req.body[key]);
@@ -52,7 +55,6 @@ const updateUserByAdmin = async (req, res, next) => {
 const updateUserByClient = async (req, res, next) => {
   try {
     let user = req.user;
-    console.log(user);
     Users.findOne({ Email: user.Email })
       .then((user) => {
         Object.keys(req.body).map((key) => {
@@ -76,6 +78,23 @@ const deleteById = async (req, res, next) => {
   }
 };
 // updatePassword,
+const updatePassword = async (req, res, next) => {
+  try {
+    let { password, newPassword } = req.body;
+    let { Email } = req.user;
+    let user = await Users.findOne({ Email });
+    let isMatch = comparePassword(password, user.password);
+    if (!isMatch) {
+      return res.status(400).json({ message: "Password is incorrect!" });
+    }
+    user.password = newPassword;
+    user.save().then((user) => {
+      return res.status(200).json(user);
+    });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
 // resetPassword => ngau nhien
 module.exports = {
   createUser,
@@ -83,5 +102,6 @@ module.exports = {
   getUserById,
   updateUserByAdmin,
   updateUserByClient,
-  deleteById
+  deleteById,
+  updatePassword
 };

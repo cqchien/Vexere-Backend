@@ -34,7 +34,7 @@ module.exports.login = async (req, res, next) => {
             message: "Password is incorrect"
           });
         }
-        const payload = _.pick(_user, ["Email", "fullname", "userType"]);
+        const payload = _.pick(_user, ["Email", "fullname", "userType", "_id"]);
         return jwtSign(payload, "CyberSoft", { expiresIn: 3600 });
       })
       .then((token) => {

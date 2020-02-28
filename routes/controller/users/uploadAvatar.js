@@ -2,11 +2,15 @@ const { Users } = require("../../../models/user.models");
 
 module.exports.uploadAvatar = async (req, res, next) => {
   try {
-    let { Email } = req.user;
-    Users.findOne({ Email })
+    let { _id } = req.user;
+    Users.findOne({ _id })
       .then((user) => {
+        if (!user) {
+          return res.status(404).json({message: "User not found"})
+        }
         console.log(req.file);
-        user.avatar = req.file.path;
+        let path = req.file.path;
+        user.avatar = path.split('\\').join('/');
         return user.save();
       })
       .then((user) =>

@@ -3,13 +3,13 @@ require("dotenv").config(); // use module dotenv to use file .env. It stores var
 const express = require("express");
 const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
-
+const config = require("./config");
 const app = express();
-const port = 3003;
+const port = config.port;
 
 // connect to database
 mongoose
-  .connect(process.env.MONGO_URL, {
+  .connect(`${config.mongoURL}`, {
     useNewUrlParser: true,
     useUnifiedTopology: true
   })
@@ -25,5 +25,5 @@ app.use("/api", require("./routes/api"));
 app.use("/upload", express.static("./upload"));
 
 app.listen(port, () => {
-  console.log(`App is running on port: ${port}`);
+  console.log(`App is running on port`);
 });

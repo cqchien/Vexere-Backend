@@ -5,6 +5,8 @@
   "main": "server.js",
   "scripts": {
     "start": "nodemon server.js",
+    "start:local:staging": "set NODE_ENV=staging& nodemon server.js",
+    "start:local:win": "set NODE_ENV=local& nodemon server.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -23,6 +25,7 @@
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
     "hogan": "^1.0.2",
+    "hogan.js": "^3.0.2",
     "jsonwebtoken": "^8.5.1",
     "lodash": "^4.17.15",
     "mongoose": "^5.9.1",

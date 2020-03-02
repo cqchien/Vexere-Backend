@@ -2,6 +2,7 @@ const { Users } = require("../../../models/user.models");
 
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
+const { secretKey } = require("../../../config/index");
 const { promisify } = require("util");
 const _ = require("lodash");
 
@@ -35,7 +36,7 @@ module.exports.login = async (req, res, next) => {
           });
         }
         const payload = _.pick(_user, ["Email", "fullname", "userType", "_id"]);
-        return jwtSign(payload, "CyberSoft", { expiresIn: 3600 });
+        return jwtSign(payload, `${secretKey}`, { expiresIn: 3600 });
       })
       .then((token) => {
         return res.status(200).json({ message: "Login successfully", token });

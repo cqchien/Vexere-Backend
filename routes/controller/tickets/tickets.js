@@ -9,6 +9,8 @@ const createTicket = async (req, res, next) => {
     let userId = req.user._id;
     let { tripId, seatCodes } = req.body;
     Trips.findOne({ _id: tripId })
+      .populate("fromStation")
+      .populate("toStation")
       .then((trip) => {
         if (!trip) {
           return Promise.reject({ message: "Trip was not found" });
@@ -16,6 +18,7 @@ const createTicket = async (req, res, next) => {
         const availableSeatCodes = trip.seats
           .filter((seat) => seat.isBooked == false)
           .map((s) => s.code);
+        console.log(availableSeatCodes);
         let errSeatCode = seatCodes.filter((seat) => {
           return availableSeatCodes.indexOf(seat) === -1;
         });
@@ -39,7 +42,7 @@ const createTicket = async (req, res, next) => {
         return Promise.all([newTicket.save(), trip.save()]);
       })
       .then((result) => {
-        sendEmail();
+        sendEmail(result[1], req.user, result[1]);
         return res.status(200).json(result[0]);
       });
   } catch (error) {

@@ -1,4 +1,5 @@
 const { jwtVerify } = require("../helper/callbackToPromise.helper");
+const { secretKey } = require("../config/index");
 
 module.exports.authenticate = async (req, res, next) => {
   const token = req.header("token");
@@ -7,7 +8,7 @@ module.exports.authenticate = async (req, res, next) => {
       .status(400)
       .json({ message: "Acsess denied, no token provided" });
   }
-  jwtVerify(token, "CyberSoft")
+  jwtVerify(token, `${secretKey}`)
     .then((decode) => {
       console.log(decode);
       req.user = decode;

@@ -1,18 +1,18 @@
 const mongoose = require("mongoose");
 
-const SeatShema = new mongoose.Schema({
+const SeatSchema = new mongoose.Schema({
   code: {
     type: String,
     require: true
   },
-  isbooked: {
+  isBooked: {
     type: Boolean,
     default: false
   }
 });
 
-const Seats = mongoose.model("Seats", SeatShema, "Seats");
+const Seats = mongoose.model("Seats", SeatSchema, "Seats");
 module.exports = {
-  SeatShema,
+  SeatSchema,
   Seats
 };

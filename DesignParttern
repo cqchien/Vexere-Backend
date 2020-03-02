@@ -1,0 +1,14 @@
+Express: Middleware:
+      --> API
+      authen
+      validation
+
+socketIO: observer
+
+loopback 3: observer + Middleware
+          -> logic
+          -> authen
+          
+loopback 4 + NestJs: Ioc (inversion of control) dependency injection
+  --> route, controller, repository, model,
+  --> service -> inject

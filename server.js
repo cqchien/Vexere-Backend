@@ -6,7 +6,6 @@ const bodyParser = require("body-parser");
 const config = require("./config");
 const app = express();
 const port = config.port;
-
 // connect to database
 mongoose
   .connect(`${config.mongoURL}`, {
@@ -17,7 +16,7 @@ mongoose
   .catch(console.log);
 
 // middleware body-parser
-app.use(bodyParser.json()); // for paresing application/json
+//app.use(bodyParser.json()); // for paresing application/json
 app.use(bodyParser.urlencoded({ extended: true }));
 
 // middleware router

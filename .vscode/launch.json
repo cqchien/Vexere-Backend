@@ -8,11 +8,15 @@
     {
       "type": "node",
       "request": "launch",
-      "name": "DEBUG Vexere",
+      "name": "DEBUG Vexere local",
       "skipFiles": [
         "<node_internals>/**"
       ],
-      "program": "${workspaceFolder}\\server.js"
+      "program": "${workspaceFolder}\\server.js",
+      "env": {
+        "NODE_ENV": "local",
+
+      }
     }
   ]
 }
